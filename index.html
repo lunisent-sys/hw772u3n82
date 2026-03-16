@@ -3,40 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOKO ZIZUEL · modern gallery</title>
+    <title>tokokelontongzizuel</title>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- NAVIGATION (GLASS NAVY) -->
-    <nav class="glass-nav">
+    <nav class="navbar">
         <div class="nav-container">
             <div class="logo-area">
-                <img id="storeLogoImg" src="https://via.placeholder.com/42x42/0a1428/9bbaff?text=Z" alt="logo">
-                <span class="store-name">TOKO ZIZUEL</span>
+                <img id="storeLogo" class="store-logo" src="https://via.placeholder.com/40x40/1a2639/9bbaff?text=Z" alt="logo">
+                <span class="store-name">tokokelontongzizuel</span>
             </div>
             <div class="nav-links">
-                <button class="nav-item" id="navHome"><i class="fas fa-store"></i> Produk</button>
-                <button class="nav-item hidden" id="navAdminPanel"><i class="fas fa-shield-halved"></i> Admin</button>
-                <button class="nav-item" id="navLogin"><i class="fas fa-right-to-bracket"></i> Login</button>
-                <button class="nav-item hidden" id="navLogout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                <button class="nav-btn" id="navHome">beranda</button>
+                <button class="nav-btn" id="navLogin">masuk</button>
+                <button class="nav-btn hidden" id="navLogout">keluar</button>
             </div>
         </div>
     </nav>
 
-    <main class="app-main" id="mainContent">
-        <!-- Dynamic content akan di-render oleh JavaScript -->
-    </main>
+    <main id="mainContent"></main>
 
     <footer class="footer">
         <a href="https://discord.gg/example" target="_blank" id="discordLink">
-            <i class="fab fa-discord"></i> © tokokelontongzizuel
+            <i class="fab fa-discord"></i> tokokelontongzizuel
         </a>
     </footer>
 
-    <!-- Custom JavaScript -->
     <script src="index.js"></script>
 </body>
 </html>
