@@ -9,7 +9,7 @@ const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // ================== KONSTANTA ==================
 const WA_NUMBER = '62895630307497';
 const ADMIN_USERNAME = 'ownerzizuel';
-const ADMIN_PASSWORD = 'tokokelontongzizuel';
+const ADMIN_PASSWORD = 'toko';
 
 // ================== STATE ==================
 let currentUser = null;
@@ -19,18 +19,12 @@ let settings = {
     logo: '',
     music: ''
 };
-let audioPlayer = null;
 
 // ================== DOM ELEMENTS ==================
 const loadingOverlay = document.getElementById('loadingOverlay');
 const adminSidebar = document.getElementById('adminSidebar');
 const sidebarOverlay = document.getElementById('sidebarOverlay');
-const logoContainer = document.getElementById('logoContainer');
-const storeLogo = document.getElementById('storeLogo');
-const storeDescriptionDisplay = document.getElementById('storeDescriptionDisplay');
-const productsGrid = document.getElementById('productsGrid');
-const navLogin = document.getElementById('navLogin');
-const navLogout = document.getElementById('navLogout');
+const mainContainer = document.getElementById('mainContainer');
 const bgMusic = document.getElementById('bgMusic');
 
 // ================== HELPER FUNCTIONS ==================
@@ -86,18 +80,6 @@ async function loadSettings() {
                 logo: data.store_logo || '',
                 music: data.music_url || ''
             };
-            
-            if (settings.logo) {
-                storeLogo.src = settings.logo;
-            }
-            
-            if (settings.music && currentUser) {
-                playMusic(settings.music);
-            }
-            
-            if (settings.description) {
-                storeDescriptionDisplay.innerHTML = `<p>${escapeHtml(settings.description)}</p>`;
-            }
         }
         
         return settings;
@@ -121,7 +103,6 @@ async function saveSettings(updates) {
         
         if (error) throw error;
         
-        // Update local settings
         if (updates.description) settings.description = updates.description;
         if (updates.logo) settings.logo = updates.logo;
         if (updates.music) settings.music = updates.music;
@@ -185,139 +166,7 @@ async function deleteProduct(id) {
     }
 }
 
-// ================== MUSIC PLAYER ==================
-function playMusic(url) {
-    if (!url) return;
-    
-    bgMusic.src = url;
-    bgMusic.play().catch(e => console.log('Autoplay blocked:', e));
-    
-    // Coba play lagi setelah interaksi user
-    document.addEventListener('click', function playOnClick() {
-        bgMusic.play();
-        document.removeEventListener('click', playOnClick);
-    }, { once: true });
-}
-
-// ================== RENDER PRODUCTS ==================
-async function renderProducts() {
-    showLoading();
-    
-    await loadProducts();
-    await loadSettings();
-    
-    if (products.length === 0) {
-        productsGrid.innerHTML = '<p style="text-align: center; color: #a0a8c0; padding: 40px;">Belum ada produk</p>';
-    } else {
-        productsGrid.innerHTML = products.map(prod => {
-            const waText = `Permisi, saya ingin membeli ${encodeURIComponent(prod.nama)} senilai Rp ${prod.harga}`;
-            return `
-                <div class="product-card">
-                    <img class="product-image" src="${prod.image || 'https://via.placeholder.com/280x200/1a1f2c/4a80f0?text=ZIZUEL'}" 
-                         onerror="this.src='https://via.placeholder.com/280x200/1a1f2c/4a80f0?text=ZIZUEL'">
-                    <div class="product-info">
-                        <div class="product-name">${escapeHtml(prod.nama)}</div>
-                        <div class="product-desc">${escapeHtml(prod.deskripsi) || '—'}</div>
-                        <div class="product-price">Rp ${formatRupiah(prod.harga)}</div>
-                        <a class="btn-wa" href="https://wa.me/${WA_NUMBER}?text=${waText}" target="_blank">
-                            <i class="fab fa-whatsapp"></i> BELI VIA WA
-                        </a>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-    
-    hideLoading();
-}
-
-// ================== ADMIN SIDEBAR ==================
-function openAdminSidebar() {
-    adminSidebar.classList.add('active');
-    sidebarOverlay.classList.add('active');
-    renderAdminProductList();
-}
-
-function closeAdminSidebar() {
-    adminSidebar.classList.remove('active');
-    sidebarOverlay.classList.remove('active');
-}
-
-async function renderAdminProductList() {
-    const listContainer = document.getElementById('adminProductList');
-    if (!listContainer) return;
-    
-    await loadProducts();
-    
-    if (products.length === 0) {
-        listContainer.innerHTML = '<p style="color: #a0a8c0; text-align: center;">Belum ada produk</p>';
-        return;
-    }
-    
-    listContainer.innerHTML = products.map(prod => `
-        <div class="admin-product-item">
-            <div class="admin-product-info">
-                <strong>${escapeHtml(prod.nama)}</strong>
-                <small>Rp ${formatRupiah(prod.harga)}</small>
-            </div>
-            <div class="admin-product-actions">
-                <button onclick="editProductHandler('${prod.id}')">Edit</button>
-                <button onclick="deleteProductHandler('${prod.id}')">Hapus</button>
-            </div>
-        </div>
-    `).join('');
-}
-
-// ================== PRODUCT HANDLERS ==================
-window.editProductHandler = async (id) => {
-    const prod = products.find(p => p.id == id);
-    if (!prod) return;
-    
-    const newName = prompt('Nama produk:', prod.nama);
-    if (newName === null) return;
-    
-    const newPrice = prompt('Harga:', prod.harga);
-    if (newPrice === null) return;
-    
-    const newDesc = prompt('Deskripsi:', prod.deskripsi || '');
-    
-    showLoading();
-    
-    try {
-        await updateProduct(id, {
-            nama: newName.trim() || prod.nama,
-            harga: parseInt(newPrice) || prod.harga,
-            deskripsi: newDesc || prod.deskripsi
-        });
-        
-        await renderProducts();
-        renderAdminProductList();
-        alert('Produk berhasil diupdate');
-    } catch (error) {
-        alert('Gagal update: ' + error.message);
-    } finally {
-        hideLoading();
-    }
-};
-
-window.deleteProductHandler = async (id) => {
-    if (!confirm('Hapus produk ini?')) return;
-    
-    showLoading();
-    
-    try {
-        await deleteProduct(id);
-        await renderProducts();
-        renderAdminProductList();
-        alert('Produk berhasil dihapus');
-    } catch (error) {
-        alert('Gagal hapus: ' + error.message);
-    } finally {
-        hideLoading();
-    }
-};
-
-// ================== LOGIN SYSTEM ==================
+// ================== USER MANAGEMENT ==================
 let users = [];
 
 function loadUsers() {
@@ -349,82 +198,121 @@ function saveUsers() {
 
 loadUsers();
 
-// ================== CHECK SAVED SESSION ==================
-function checkSavedSession() {
-    const saved = localStorage.getItem('tokozizuel_currentUser');
-    if (saved) {
-        try {
-            currentUser = JSON.parse(saved);
-            updateAuthUI();
-            renderProducts();
-            
-            if (currentUser.role === 'admin') {
-                logoContainer.style.cursor = 'pointer';
-            }
-            
-            return true;
-        } catch (e) {
-            localStorage.removeItem('tokozizuel_currentUser');
-        }
-    }
-    return false;
-}
-
-// ================== AUTH UI ==================
-function updateAuthUI() {
-    if (currentUser) {
-        navLogin.classList.add('hidden');
-        navLogout.classList.remove('hidden');
-    } else {
-        navLogin.classList.remove('hidden');
-        navLogout.classList.add('hidden');
-        logoContainer.style.cursor = 'default';
-    }
-}
-
-// ================== LOGIN MODAL ==================
-function showLoginModal() {
-    const modal = document.createElement('div');
-    modal.className = 'login-modal active';
-    modal.id = 'loginModal';
-    modal.innerHTML = `
-        <div class="login-container">
-            <button class="close-login" id="closeLogin"><i class="fas fa-times"></i></button>
-            <h2>LOGIN</h2>
-            <div id="loginPanel">
-                <input type="text" id="loginUsername" class="login-input" placeholder="username" autocomplete="off">
-                <input type="password" id="loginPassword" class="login-input" placeholder="password">
-                <button class="login-btn" id="doLogin">MASUK</button>
-                <div class="login-switch">
-                    Belum punya akun? <span id="showRegister">Buat akun</span>
+// ================== RENDER LOGIN PAGE ==================
+function renderLoginPage() {
+    mainContainer.innerHTML = `
+        <div class="login-modal" style="position: relative; background: transparent; backdrop-filter: none;">
+            <div class="login-container">
+                <h2>TOKO <span>KELONTONG</span><br>ZIZUEL</h2>
+                
+                <div id="loginPanel">
+                    <input type="text" id="loginUsername" class="login-input" placeholder="username">
+                    <input type="password" id="loginPassword" class="login-input" placeholder="password">
+                    <button class="login-btn" id="doLogin">LOGIN</button>
+                    <div class="login-switch">
+                        Belum punya akun?<br>
+                        <span id="showRegister">Buat akun</span>
+                    </div>
+                    <div id="loginMessage" class="login-message"></div>
                 </div>
-                <div id="loginMessage" class="login-message"></div>
-            </div>
-            <div id="registerPanel" style="display: none;">
-                <input type="text" id="regUsername" class="login-input" placeholder="username">
-                <input type="email" id="regEmail" class="login-input" placeholder="email">
-                <input type="password" id="regPassword" class="login-input" placeholder="password">
-                <button class="login-btn" id="doRegister">DAFTAR</button>
-                <div class="login-switch">
-                    Sudah punya akun? <span id="showLogin">Masuk</span>
+                
+                <div id="registerPanel" style="display: none;">
+                    <input type="text" id="regUsername" class="login-input" placeholder="username">
+                    <input type="email" id="regEmail" class="login-input" placeholder="email">
+                    <input type="password" id="regPassword" class="login-input" placeholder="password">
+                    <button class="login-btn" id="doRegister">DAFTAR</button>
+                    <div class="login-switch">
+                        Sudah punya akun?<br>
+                        <span id="showLogin">Login</span>
+                    </div>
+                    <div id="registerMessage" class="login-message"></div>
                 </div>
-                <div id="registerMessage" class="login-message"></div>
             </div>
         </div>
     `;
     
-    document.body.appendChild(modal);
+    attachLoginEvents();
+}
+
+// ================== RENDER MAIN PAGE (SETELAH LOGIN) ==================
+async function renderMainPage() {
+    showLoading();
     
-    document.getElementById('closeLogin').addEventListener('click', () => {
-        modal.remove();
-    });
+    await loadProducts();
+    await loadSettings();
     
-    document.getElementById('showRegister').addEventListener('click', () => {
+    const header = `
+        <header class="header">
+            <div class="logo-area" id="logoContainer">
+                <img id="storeLogo" class="store-logo" src="${settings.logo || 'https://via.placeholder.com/70x70/1a1f2c/4a80f0?text=Z'}" alt="Toko Zizuel">
+                <div class="store-title">
+                    <div class="line1">TOKO KELONTONG</div>
+                    <div class="line2">ZIZUEL</div>
+                </div>
+            </div>
+            <button class="btn-logout" id="navLogout">KELUAR</button>
+        </header>
+        
+        <div class="store-description">
+            <p>${escapeHtml(settings.description)}</p>
+        </div>
+        
+        <div class="products-grid" id="productsGrid"></div>
+    `;
+    
+    mainContainer.innerHTML = header;
+    
+    // Render produk
+    const productsGrid = document.getElementById('productsGrid');
+    
+    if (products.length === 0) {
+        productsGrid.innerHTML = '<p style="text-align: center; color: #a0a8c0; padding: 40px;">Belum ada produk</p>';
+    } else {
+        productsGrid.innerHTML = products.map(prod => {
+            const waText = `Permisi, saya ingin membeli ${encodeURIComponent(prod.nama)} senilai Rp ${prod.harga}`;
+            return `
+                <div class="product-card">
+                    <img class="product-image" src="${prod.image || 'https://via.placeholder.com/300x200/1a1f2c/4a80f0?text=ZIZUEL'}" 
+                         onerror="this.src='https://via.placeholder.com/300x200/1a1f2c/4a80f0?text=ZIZUEL'">
+                    <div class="product-info">
+                        <div class="product-name">${escapeHtml(prod.nama)}</div>
+                        <div class="product-desc">${escapeHtml(prod.deskripsi) || '—'}</div>
+                        <div class="product-price">Rp ${formatRupiah(prod.harga)}</div>
+                        <a class="btn-wa" href="https://wa.me/${WA_NUMBER}?text=${waText}" target="_blank">
+                            <i class="fab fa-whatsapp"></i> BELI VIA WA
+                        </a>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    // Pasang event listeners
+    document.getElementById('navLogout').addEventListener('click', logout);
+    
+    const logoContainer = document.getElementById('logoContainer');
+    if (currentUser?.role === 'admin') {
+        logoContainer.style.cursor = 'pointer';
+        logoContainer.addEventListener('click', openAdminSidebar);
+    }
+    
+    // Play musik
+    if (settings.music) {
+        bgMusic.src = settings.music;
+        bgMusic.play().catch(e => console.log('Autoplay blocked'));
+    }
+    
+    hideLoading();
+}
+
+// ================== LOGIN EVENTS ==================
+function attachLoginEvents() {
+    document.getElementById('showRegister')?.addEventListener('click', () => {
         document.getElementById('loginPanel').style.display = 'none';
         document.getElementById('registerPanel').style.display = 'block';
     });
     
-    document.getElementById('showLogin').addEventListener('click', () => {
+    document.getElementById('showLogin')?.addEventListener('click', () => {
         document.getElementById('registerPanel').style.display = 'none';
         document.getElementById('loginPanel').style.display = 'block';
     });
@@ -445,13 +333,7 @@ function showLoginModal() {
             msg.style.display = 'block';
             
             setTimeout(() => {
-                modal.remove();
-                updateAuthUI();
-                renderProducts();
-                
-                if (currentUser.role === 'admin') {
-                    logoContainer.style.cursor = 'pointer';
-                }
+                renderMainPage();
             }, 500);
         } else {
             msg.className = 'login-message error';
@@ -511,51 +393,141 @@ function showLoginModal() {
     });
 }
 
+// ================== ADMIN SIDEBAR ==================
+function openAdminSidebar() {
+    adminSidebar.classList.add('active');
+    sidebarOverlay.classList.add('active');
+    renderAdminProductList();
+    
+    // Isi form dengan data yang ada
+    document.getElementById('storeDescription').value = settings.description;
+    document.getElementById('logoFileName').textContent = settings.logo ? 'Logo tersedia' : 'Belum ada file';
+    document.getElementById('musicFileName').textContent = settings.music ? 'Musik tersedia' : 'Belum ada file';
+}
+
+function closeAdminSidebar() {
+    adminSidebar.classList.remove('active');
+    sidebarOverlay.classList.remove('active');
+}
+
+async function renderAdminProductList() {
+    const listContainer = document.getElementById('adminProductList');
+    if (!listContainer) return;
+    
+    await loadProducts();
+    
+    if (products.length === 0) {
+        listContainer.innerHTML = '<p style="color: #a0a8c0; text-align: center;">Belum ada produk</p>';
+        return;
+    }
+    
+    listContainer.innerHTML = products.map(prod => `
+        <div class="admin-product-item">
+            <div class="admin-product-info">
+                <strong>${escapeHtml(prod.nama)}</strong>
+                <small>Rp ${formatRupiah(prod.harga)}</small>
+            </div>
+            <div class="admin-product-actions">
+                <button onclick="editProductHandler('${prod.id}')">EDIT</button>
+                <button onclick="deleteProductHandler('${prod.id}')">HAPUS</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ================== PRODUCT HANDLERS ==================
+window.editProductHandler = async (id) => {
+    const prod = products.find(p => p.id == id);
+    if (!prod) return;
+    
+    const newName = prompt('Nama produk:', prod.nama);
+    if (newName === null) return;
+    
+    const newPrice = prompt('Harga:', prod.harga);
+    if (newPrice === null) return;
+    
+    const newDesc = prompt('Deskripsi:', prod.deskripsi || '');
+    
+    showLoading();
+    
+    try {
+        await updateProduct(id, {
+            nama: newName.trim() || prod.nama,
+            harga: parseInt(newPrice) || prod.harga,
+            deskripsi: newDesc || prod.deskripsi
+        });
+        
+        await renderMainPage();
+        renderAdminProductList();
+        alert('Produk berhasil diupdate');
+    } catch (error) {
+        alert('Gagal update: ' + error.message);
+    } finally {
+        hideLoading();
+    }
+};
+
+window.deleteProductHandler = async (id) => {
+    if (!confirm('Hapus produk ini?')) return;
+    
+    showLoading();
+    
+    try {
+        await deleteProduct(id);
+        await renderMainPage();
+        renderAdminProductList();
+        alert('Produk berhasil dihapus');
+    } catch (error) {
+        alert('Gagal hapus: ' + error.message);
+    } finally {
+        hideLoading();
+    }
+};
+
 // ================== LOGOUT ==================
 function logout() {
     currentUser = null;
     localStorage.removeItem('tokozizuel_currentUser');
-    updateAuthUI();
-    renderProducts();
-    closeAdminSidebar();
     bgMusic.pause();
     bgMusic.src = '';
+    closeAdminSidebar();
+    renderLoginPage();
 }
 
-// ================== INITIALIZE ==================
-async function init() {
-    // Check session
-    checkSavedSession();
-    
-    // Load initial data
-    await renderProducts();
-    
-    // Event listeners
-    navLogin.addEventListener('click', showLoginModal);
-    
-    navLogout.addEventListener('click', logout);
-    
-    logoContainer.addEventListener('click', () => {
-        if (currentUser?.role === 'admin') {
-            openAdminSidebar();
+// ================== CHECK SESSION ==================
+function checkSession() {
+    const saved = localStorage.getItem('tokozizuel_currentUser');
+    if (saved) {
+        try {
+            currentUser = JSON.parse(saved);
+            renderMainPage();
+        } catch (e) {
+            localStorage.removeItem('tokozizuel_currentUser');
+            renderLoginPage();
         }
-    });
-    
-    sidebarOverlay.addEventListener('click', closeAdminSidebar);
+    } else {
+        renderLoginPage();
+    }
+}
+
+// ================== INIT ADMIN SIDEBAR EVENTS ==================
+function initAdminEvents() {
     document.getElementById('closeSidebar').addEventListener('click', closeAdminSidebar);
+    sidebarOverlay.addEventListener('click', closeAdminSidebar);
     
-    // Admin panel events
+    // Save description
     document.getElementById('saveDescriptionBtn').addEventListener('click', async () => {
         const desc = document.getElementById('storeDescription').value.trim();
         if (desc) {
             showLoading();
             await saveSettings({ description: desc });
-            storeDescriptionDisplay.innerHTML = `<p>${escapeHtml(desc)}</p>`;
+            await renderMainPage();
             hideLoading();
             alert('Deskripsi berhasil disimpan');
         }
     });
     
+    // Logo upload
     document.getElementById('logoUpload').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file && file.type.startsWith('image/')) {
@@ -563,8 +535,8 @@ async function init() {
             reader.onload = async (event) => {
                 showLoading();
                 await saveSettings({ logo: event.target.result });
-                storeLogo.src = event.target.result;
                 document.getElementById('logoFileName').textContent = file.name;
+                await renderMainPage();
                 hideLoading();
                 alert('Logo berhasil disimpan');
             };
@@ -572,6 +544,7 @@ async function init() {
         }
     });
     
+    // Music upload
     document.getElementById('musicUpload').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file && file.type === 'audio/mpeg') {
@@ -580,11 +553,7 @@ async function init() {
                 showLoading();
                 await saveSettings({ music: event.target.result });
                 document.getElementById('musicFileName').textContent = file.name;
-                
-                if (currentUser) {
-                    playMusic(event.target.result);
-                }
-                
+                await renderMainPage();
                 hideLoading();
                 alert('Musik berhasil disimpan');
             };
@@ -594,6 +563,7 @@ async function init() {
         }
     });
     
+    // Add product
     document.getElementById('addProductBtn').addEventListener('click', () => {
         const name = document.getElementById('productName').value.trim();
         const price = document.getElementById('productPrice').value.trim();
@@ -605,68 +575,54 @@ async function init() {
             return;
         }
         
+        const processAdd = async (imageData) => {
+            showLoading();
+            try {
+                await saveProduct({
+                    nama: name,
+                    harga: parseInt(price) || 0,
+                    deskripsi: desc || '',
+                    image: imageData || ''
+                });
+                
+                await renderMainPage();
+                renderAdminProductList();
+                
+                document.getElementById('productName').value = '';
+                document.getElementById('productPrice').value = '';
+                document.getElementById('productDesc').value = '';
+                document.getElementById('productImage').value = '';
+                document.getElementById('productImageName').textContent = 'Tidak ada';
+                
+                alert('Produk berhasil ditambahkan');
+            } catch (error) {
+                alert('Gagal: ' + error.message);
+            } finally {
+                hideLoading();
+            }
+        };
+        
         if (imageFile && imageFile.type.startsWith('image/')) {
             const reader = new FileReader();
-            reader.onload = async (e) => {
-                showLoading();
-                try {
-                    await saveProduct({
-                        nama: name,
-                        harga: parseInt(price) || 0,
-                        deskripsi: desc || '',
-                        image: e.target.result
-                    });
-                    
-                    await renderProducts();
-                    renderAdminProductList();
-                    
-                    document.getElementById('productName').value = '';
-                    document.getElementById('productPrice').value = '';
-                    document.getElementById('productDesc').value = '';
-                    document.getElementById('productImage').value = '';
-                    document.getElementById('productImageName').textContent = 'Tidak ada';
-                    
-                    alert('Produk berhasil ditambahkan');
-                } catch (error) {
-                    alert('Gagal: ' + error.message);
-                } finally {
-                    hideLoading();
-                }
-            };
+            reader.onload = (e) => processAdd(e.target.result);
             reader.readAsDataURL(imageFile);
         } else {
-            (async () => {
-                showLoading();
-                try {
-                    await saveProduct({
-                        nama: name,
-                        harga: parseInt(price) || 0,
-                        deskripsi: desc || '',
-                        image: ''
-                    });
-                    
-                    await renderProducts();
-                    renderAdminProductList();
-                    
-                    document.getElementById('productName').value = '';
-                    document.getElementById('productPrice').value = '';
-                    document.getElementById('productDesc').value = '';
-                    
-                    alert('Produk berhasil ditambahkan');
-                } catch (error) {
-                    alert('Gagal: ' + error.message);
-                } finally {
-                    hideLoading();
-                }
-            })();
+            processAdd(null);
         }
     });
     
+    // Product image name display
     document.getElementById('productImage').addEventListener('change', function(e) {
         const fileName = e.target.files[0]?.name || 'Tidak ada';
         document.getElementById('productImageName').textContent = fileName;
     });
 }
 
-// Start the app
-init();
+// ================== START APP ==================
+checkSession();
+
+// Initialize admin events after DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    initAdminEvents();
+});
+   

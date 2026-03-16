@@ -22,62 +22,62 @@
     <!-- Sidebar Admin (muncul dari kiri) -->
     <div class="admin-sidebar" id="adminSidebar">
         <div class="sidebar-header">
-            <h2>Panel Admin</h2>
+            <h2>PANEL ADMIN</h2>
             <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
         </div>
         <div class="sidebar-content">
             <!-- Deskripsi Toko -->
             <div class="admin-section">
-                <h3>Deskripsi Toko</h3>
+                <h3>DESKRIPSI TOKO</h3>
                 <textarea id="storeDescription" class="admin-input" rows="3">Toko Kelontong Zizuel menyediakan layanan hosting server bot maupun game, bersedia melengkapi kebutuhan hostingmu</textarea>
-                <button class="admin-btn" id="saveDescriptionBtn">Simpan Deskripsi</button>
+                <button class="admin-btn" id="saveDescriptionBtn">SIMPAN DESKRIPSI</button>
             </div>
 
             <!-- Logo Toko -->
             <div class="admin-section">
-                <h3>Logo Toko</h3>
+                <h3>LOGO TOKO</h3>
                 <div class="file-upload-area">
                     <label for="logoUpload" class="file-label">
-                        <i class="fas fa-upload"></i> Pilih Gambar Logo
+                        <i class="fas fa-upload"></i> PILIH GAMBAR LOGO
                     </label>
                     <input type="file" id="logoUpload" accept="image/*" hidden>
                     <span class="file-name" id="logoFileName">Belum ada file</span>
                 </div>
-                <button class="admin-btn" id="saveLogoBtn">Simpan Logo</button>
+                <button class="admin-btn" id="saveLogoBtn">SIMPAN LOGO</button>
             </div>
 
             <!-- Musik Latar -->
             <div class="admin-section">
-                <h3>Musik Latar (Auto Play)</h3>
+                <h3>MUSIK LATAR</h3>
                 <div class="file-upload-area">
                     <label for="musicUpload" class="file-label">
-                        <i class="fas fa-music"></i> Pilih File MP3
+                        <i class="fas fa-music"></i> PILIH FILE MP3
                     </label>
                     <input type="file" id="musicUpload" accept="audio/mpeg" hidden>
                     <span class="file-name" id="musicFileName">Belum ada file</span>
                 </div>
-                <button class="admin-btn" id="saveMusicBtn">Simpan Musik</button>
+                <button class="admin-btn" id="saveMusicBtn">SIMPAN MUSIK</button>
             </div>
 
             <!-- Tambah Produk -->
             <div class="admin-section">
-                <h3>Tambah Produk</h3>
-                <input type="text" id="productName" class="admin-input" placeholder="Nama Produk">
-                <input type="number" id="productPrice" class="admin-input" placeholder="Harga">
-                <textarea id="productDesc" class="admin-input" rows="2" placeholder="Deskripsi Produk"></textarea>
+                <h3>TAMBAH PRODUK</h3>
+                <input type="text" id="productName" class="admin-input" placeholder="NAMA PRODUK">
+                <input type="number" id="productPrice" class="admin-input" placeholder="HARGA">
+                <textarea id="productDesc" class="admin-input" rows="2" placeholder="DESKRIPSI PRODUK"></textarea>
                 <div class="file-upload-area">
                     <label for="productImage" class="file-label">
-                        <i class="fas fa-image"></i> Gambar Produk
+                        <i class="fas fa-image"></i> GAMBAR PRODUK
                     </label>
                     <input type="file" id="productImage" accept="image/*" hidden>
                     <span class="file-name" id="productImageName">Tidak ada</span>
                 </div>
-                <button class="admin-btn" id="addProductBtn">Tambah Produk</button>
+                <button class="admin-btn" id="addProductBtn">TAMBAH PRODUK</button>
             </div>
 
-            <!-- Daftar Produk (Edit/Delete) -->
+            <!-- Daftar Produk -->
             <div class="admin-section">
-                <h3>Daftar Produk</h3>
+                <h3>DAFTAR PRODUK</h3>
                 <div id="adminProductList" class="admin-product-list"></div>
             </div>
         </div>
@@ -87,29 +87,8 @@
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <!-- Main Content -->
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="logo-container" id="logoContainer">
-                <img id="storeLogo" class="store-logo" src="https://via.placeholder.com/60x60/1a2639/9bbaff?text=Z" alt="Toko Zizuel">
-                <div class="store-title">
-                    <h1>TOKO KELONTONG</h1>
-                    <h2>ZIZUEL</h2>
-                </div>
-            </div>
-            <div class="auth-buttons">
-                <button class="btn-login" id="navLogin">LOGIN</button>
-                <button class="btn-logout hidden" id="navLogout">KELUAR</button>
-            </div>
-        </header>
-
-        <!-- Deskripsi Toko -->
-        <div class="store-description" id="storeDescriptionDisplay">
-            <p>Toko Kelontong Zizuel menyediakan layanan hosting server bot maupun game, bersedia melengkapi kebutuhan hostingmu</p>
-        </div>
-
-        <!-- Products Grid -->
-        <div class="products-grid" id="productsGrid"></div>
+    <div class="container" id="mainContainer">
+        <!-- Akan diisi oleh JavaScript -->
     </div>
 
     <!-- Hidden Audio Player -->

@@ -55,65 +55,62 @@ body {
     padding: 20px;
 }
 
-/* Header */
+/* Header - SAMA PERSIS KAYA GAMBAR */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
     flex-wrap: wrap;
     gap: 20px;
 }
 
-.logo-container {
+.logo-area {
     display: flex;
     align-items: center;
     gap: 15px;
-    cursor: pointer;
-    transition: opacity 0.2s;
-}
-
-.logo-container:hover {
-    opacity: 0.9;
 }
 
 .store-logo {
-    width: 60px;
-    height: 60px;
-    border-radius: 12px;
+    width: 70px;
+    height: 70px;
+    border-radius: 16px;
     object-fit: cover;
     background: #1a1f2c;
-    border: 1px solid #2a3142;
+    border: 2px solid #2a3142;
 }
 
-.store-title h1 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #e0e4f0;
-    line-height: 1.2;
+.store-title {
+    display: flex;
+    flex-direction: column;
 }
 
-.store-title h2 {
+.store-title .line1 {
     font-size: 1.8rem;
     font-weight: 700;
-    color: #4a80f0;
+    color: #ffffff;
     line-height: 1.2;
 }
 
-.auth-buttons button {
-    padding: 10px 30px;
-    border-radius: 30px;
-    font-size: 1rem;
+.store-title .line2 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #4a80f0;
+    line-height: 1.2;
+    letter-spacing: 2px;
+}
+
+/* Login Button */
+.btn-login {
+    background: #2a3142;
+    color: #ffffff;
+    border: 2px solid #3a4258;
+    border-radius: 40px;
+    padding: 12px 40px;
+    font-size: 1.2rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-    border: none;
-}
-
-.btn-login {
-    background: #2a3142;
-    color: #e0e4f0;
-    border: 1px solid #3a4258;
 }
 
 .btn-login:hover {
@@ -124,38 +121,160 @@ body {
 .btn-logout {
     background: #2a1f2a;
     color: #ff8a8a;
-    border: 1px solid #ff4a4a;
+    border: 2px solid #ff4a4a;
+    border-radius: 40px;
+    padding: 12px 40px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
 }
 
-.btn-logout:hover {
-    background: #3f2a2a;
+/* Login Modal - SAMA PERSIS KAYA GAMBAR */
+.login-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 12, 18, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Store Description */
-.store-description {
+.login-container {
     background: #121620;
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 30px;
+    border-radius: 30px;
+    padding: 50px 40px;
+    width: 90%;
+    max-width: 400px;
     border: 1px solid #2a3142;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
 }
 
-.store-description p {
+.login-container h2 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+}
+
+.login-container h2 span {
+    color: #4a80f0;
+}
+
+.login-input {
+    width: 100%;
+    background: #1a1f2c;
+    border: 1px solid #2a3142;
+    border-radius: 40px;
+    padding: 16px 20px;
+    color: #ffffff;
+    font-size: 1rem;
+    margin-bottom: 15px;
+}
+
+.login-input:focus {
+    outline: none;
+    border-color: #4a80f0;
+}
+
+.login-input::placeholder {
+    color: #5a6278;
+}
+
+.login-btn {
+    width: 100%;
+    background: #4a80f0;
+    border: none;
+    border-radius: 40px;
+    padding: 16px;
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin: 20px 0;
+    letter-spacing: 2px;
+}
+
+.login-btn:hover {
+    background: #5a90ff;
+}
+
+.login-switch {
+    text-align: center;
     color: #a0a8c0;
     font-size: 1rem;
     line-height: 1.6;
 }
 
-/* Products Grid */
+.login-switch span {
+    color: #4a80f0;
+    cursor: pointer;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.login-switch span:hover {
+    text-decoration: underline;
+}
+
+.login-message {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 40px;
+    font-size: 0.9rem;
+    text-align: center;
+    display: none;
+}
+
+.login-message.error {
+    display: block;
+    background: #2a1f2a;
+    border: 1px solid #ff4a4a;
+    color: #ffb0b0;
+}
+
+.login-message.success {
+    display: block;
+    background: #1a2a1f;
+    border: 1px solid #4ae0a0;
+    color: #b0ffc0;
+}
+
+/* Store Description - SAMA PERSIS KAYA GAMBAR */
+.store-description {
+    background: #121620;
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 40px;
+    border: 1px solid #2a3142;
+}
+
+.store-description p {
+    color: #a0a8c0;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    text-align: center;
+    font-weight: 400;
+}
+
+/* Products Grid - SAMA PERSIS KAYA GAMBAR */
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
 }
 
 .product-card {
     background: #121620;
-    border-radius: 16px;
+    border-radius: 20px;
     overflow: hidden;
     border: 1px solid #2a3142;
     transition: transform 0.2s, border-color 0.2s;
@@ -174,28 +293,28 @@ body {
 }
 
 .product-info {
-    padding: 15px;
+    padding: 20px;
 }
 
 .product-name {
-    font-size: 1.2rem;
-    font-weight: 600;
+    font-size: 1.3rem;
+    font-weight: 700;
     color: #ffffff;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
 }
 
 .product-desc {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: #a0a8c0;
-    margin-bottom: 10px;
-    line-height: 1.4;
+    margin-bottom: 15px;
+    line-height: 1.5;
 }
 
 .product-price {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 700;
     color: #4ae0a0;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .btn-wa {
@@ -203,8 +322,8 @@ body {
     background: #1a3a3a;
     color: #ffffff;
     text-decoration: none;
-    padding: 12px;
-    border-radius: 30px;
+    padding: 14px;
+    border-radius: 40px;
     text-align: center;
     font-weight: 600;
     border: 1px solid #2a8f6f;
@@ -227,7 +346,7 @@ body {
     top: 0;
     left: -100%;
     width: 90%;
-    max-width: 400px;
+    max-width: 450px;
     height: 100vh;
     background: #0f131a;
     border-right: 1px solid #2a3142;
@@ -256,6 +375,7 @@ body {
 .sidebar-header h2 {
     font-size: 1.3rem;
     color: #4a80f0;
+    letter-spacing: 1px;
 }
 
 .close-sidebar {
@@ -279,26 +399,25 @@ body {
 
 .admin-section {
     background: #0a0d14;
-    border-radius: 12px;
-    padding: 15px;
+    border-radius: 16px;
+    padding: 20px;
     margin-bottom: 20px;
     border: 1px solid #2a3142;
 }
 
 .admin-section h3 {
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: #a0a8c0;
     margin-bottom: 15px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
 }
 
 .admin-input {
     width: 100%;
     background: #1a1f2c;
     border: 1px solid #2a3142;
-    border-radius: 8px;
-    padding: 10px 12px;
+    border-radius: 12px;
+    padding: 12px 15px;
     color: #ffffff;
     font-size: 0.95rem;
     margin-bottom: 10px;
@@ -318,8 +437,8 @@ body {
     display: inline-block;
     background: #1a1f2c;
     border: 1px dashed #4a80f0;
-    border-radius: 8px;
-    padding: 8px 16px;
+    border-radius: 12px;
+    padding: 10px 20px;
     font-size: 0.9rem;
     color: #a0a8c0;
     cursor: pointer;
@@ -333,7 +452,7 @@ body {
 
 .file-name {
     display: block;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: #a0a8c0;
     margin-top: 5px;
 }
@@ -342,13 +461,14 @@ body {
     width: 100%;
     background: #1a1f2c;
     border: 1px solid #3a4258;
-    border-radius: 8px;
-    padding: 10px;
+    border-radius: 12px;
+    padding: 12px;
     color: #ffffff;
-    font-size: 0.95rem;
-    font-weight: 500;
+    font-size: 0.9rem;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
+    letter-spacing: 0.5px;
 }
 
 .admin-btn:hover {
@@ -366,8 +486,8 @@ body {
     justify-content: space-between;
     align-items: center;
     background: #1a1f2c;
-    border-radius: 8px;
-    padding: 10px;
+    border-radius: 12px;
+    padding: 12px;
     margin-bottom: 8px;
 }
 
@@ -394,8 +514,8 @@ body {
 .admin-product-actions button {
     background: none;
     border: 1px solid #3a4258;
-    border-radius: 6px;
-    padding: 5px 10px;
+    border-radius: 8px;
+    padding: 5px 12px;
     color: #a0a8c0;
     font-size: 0.8rem;
     cursor: pointer;
@@ -428,128 +548,6 @@ body {
     visibility: visible;
 }
 
-/* Login Modal */
-.login-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(10, 12, 18, 0.95);
-    backdrop-filter: blur(10px);
-    z-index: 2000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-}
-
-.login-modal.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-.login-container {
-    background: #121620;
-    border-radius: 24px;
-    padding: 40px 30px;
-    width: 90%;
-    max-width: 360px;
-    border: 1px solid #2a3142;
-    position: relative;
-}
-
-.login-container h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #4a80f0;
-}
-
-.login-input {
-    width: 100%;
-    background: #1a1f2c;
-    border: 1px solid #2a3142;
-    border-radius: 12px;
-    padding: 14px 16px;
-    color: #ffffff;
-    font-size: 1rem;
-    margin-bottom: 15px;
-}
-
-.login-input:focus {
-    outline: none;
-    border-color: #4a80f0;
-}
-
-.login-btn {
-    width: 100%;
-    background: #4a80f0;
-    border: none;
-    border-radius: 12px;
-    padding: 14px;
-    color: #ffffff;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-    margin-bottom: 20px;
-}
-
-.login-btn:hover {
-    background: #5a90ff;
-}
-
-.login-switch {
-    text-align: center;
-    color: #a0a8c0;
-    font-size: 0.9rem;
-}
-
-.login-switch span {
-    color: #4a80f0;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-.login-switch span:hover {
-    text-decoration: underline;
-}
-
-.login-message {
-    margin-top: 15px;
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    display: none;
-}
-
-.login-message.error {
-    display: block;
-    background: #2a1f2a;
-    border: 1px solid #ff4a4a;
-    color: #ffb0b0;
-}
-
-.login-message.success {
-    display: block;
-    background: #1a2a1f;
-    border: 1px solid #4ae0a0;
-    color: #b0ffc0;
-}
-
-.close-login {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: none;
-    color: #a0a8c0;
-    font-size: 1.5rem;
-    cursor: pointer;
-}
-
 /* Hidden */
 .hidden {
     display: none !important;
@@ -562,24 +560,23 @@ body {
         text-align: center;
     }
     
-    .logo-container {
+    .logo-area {
         justify-content: center;
     }
     
-    .store-title h1 {
-        font-size: 1.2rem;
+    .store-title .line1 {
+        font-size: 1.4rem;
     }
     
-    .store-title h2 {
-        font-size: 1.5rem;
+    .store-title .line2 {
+        font-size: 1.8rem;
     }
     
     .products-grid {
         grid-template-columns: 1fr;
     }
     
-    .admin-sidebar {
-        width: 100%;
-        max-width: 100%;
+    .login-container {
+        padding: 40px 20px;
     }
 }
