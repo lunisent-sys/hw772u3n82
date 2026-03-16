@@ -9,7 +9,7 @@ const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // ================== KONSTANTA ==================
 const WA_NUMBER = '62895630307497';
 const ADMIN_USERNAME = 'ownerzizuel';
-const ADMIN_PASSWORD = 'tokokelontongzizuel';
+const ADMIN_PASSWORD = 'toko';
 
 // ================== STATE ==================
 let currentUser = null;
