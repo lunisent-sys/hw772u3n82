@@ -3,7 +3,7 @@ let db = {
     users: [],
     products: [],
     storeLogo: "",
-    storeHeader: "Semua produk terbaru dari tokokelontongzizuel",
+    storeHeader: "Produk tokokelontongzizuel",
     musicUrl: null,
     musicName: null
 };
