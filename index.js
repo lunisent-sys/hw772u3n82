@@ -9,7 +9,7 @@ const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // ================== KONSTANTA ==================
 const WA_NUMBER = '62895630307497';
 const ADMIN_USERNAME = 'ownerzizuel';
-const ADMIN_PASSWORD = 'toko';
+const ADMIN_PASSWORD = 'tokokelontongzizuel';
 
 // ================== STATE ==================
 let currentUser = null;
@@ -200,6 +200,9 @@ loadUsers();
 
 // ================== RENDER LOGIN PAGE ==================
 function renderLoginPage() {
+    // Sembunyikan footer
+    document.getElementById('mainFooter').style.display = 'none';
+    
     mainContainer.innerHTML = `
         <div class="login-modal" style="position: relative; background: transparent; backdrop-filter: none;">
             <div class="login-container">
@@ -238,13 +241,16 @@ function renderLoginPage() {
 async function renderMainPage() {
     showLoading();
     
+    // Tampilkan footer
+    document.getElementById('mainFooter').style.display = 'block';
+    
     await loadProducts();
     await loadSettings();
     
     const header = `
         <header class="header">
             <div class="logo-area" id="logoContainer">
-                <img id="storeLogo" class="store-logo" src="${settings.logo || 'https://via.placeholder.com/70x70/1a1f2c/4a80f0?text=Z'}" alt="Toko Zizuel">
+                <img id="storeLogo" class="store-logo" src="${settings.logo || 'https://via.placeholder.com/60x60/3b82f6/ffffff?text=Z'}" alt="Toko Zizuel">
                 <div class="store-title">
                     <div class="line1">TOKO KELONTONG</div>
                     <div class="line2">ZIZUEL</div>
@@ -266,14 +272,14 @@ async function renderMainPage() {
     const productsGrid = document.getElementById('productsGrid');
     
     if (products.length === 0) {
-        productsGrid.innerHTML = '<p style="text-align: center; color: #a0a8c0; padding: 40px;">Belum ada produk</p>';
+        productsGrid.innerHTML = '<p style="text-align: center; color: #64748b; padding: 40px;">Belum ada produk</p>';
     } else {
         productsGrid.innerHTML = products.map(prod => {
             const waText = `Permisi, saya ingin membeli ${encodeURIComponent(prod.nama)} senilai Rp ${prod.harga}`;
             return `
                 <div class="product-card">
-                    <img class="product-image" src="${prod.image || 'https://via.placeholder.com/300x200/1a1f2c/4a80f0?text=ZIZUEL'}" 
-                         onerror="this.src='https://via.placeholder.com/300x200/1a1f2c/4a80f0?text=ZIZUEL'">
+                    <img class="product-image" src="${prod.image || 'https://via.placeholder.com/280x180/2563eb/ffffff?text=ZIZUEL'}" 
+                         onerror="this.src='https://via.placeholder.com/280x180/2563eb/ffffff?text=ZIZUEL'">
                     <div class="product-info">
                         <div class="product-name">${escapeHtml(prod.nama)}</div>
                         <div class="product-desc">${escapeHtml(prod.deskripsi) || '—'}</div>
@@ -287,7 +293,7 @@ async function renderMainPage() {
         }).join('');
     }
     
-    // Pasang event listeners
+    // Event listeners
     document.getElementById('navLogout').addEventListener('click', logout);
     
     const logoContainer = document.getElementById('logoContainer');
@@ -295,6 +301,10 @@ async function renderMainPage() {
         logoContainer.style.cursor = 'pointer';
         logoContainer.addEventListener('click', openAdminSidebar);
     }
+    
+    // Set link Discord
+    const discordLink = document.getElementById('discordLink');
+    discordLink.href = 'https://discord.gg/zizuel';
     
     // Play musik
     if (settings.music) {
@@ -417,7 +427,7 @@ async function renderAdminProductList() {
     await loadProducts();
     
     if (products.length === 0) {
-        listContainer.innerHTML = '<p style="color: #a0a8c0; text-align: center;">Belum ada produk</p>';
+        listContainer.innerHTML = '<p style="color: #ffffff; text-align: center;">Belum ada produk</p>';
         return;
     }
     
@@ -491,6 +501,10 @@ function logout() {
     bgMusic.pause();
     bgMusic.src = '';
     closeAdminSidebar();
+    
+    // Sembunyikan footer
+    document.getElementById('mainFooter').style.display = 'none';
+    
     renderLoginPage();
 }
 
@@ -625,4 +639,4 @@ checkSession();
 document.addEventListener('DOMContentLoaded', () => {
     initAdminEvents();
 });
-   
+ 
