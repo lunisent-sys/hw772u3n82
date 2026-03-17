@@ -10,8 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Drag & Drop Sortable -->
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
@@ -77,10 +75,10 @@
                 <button class="admin-btn" id="addProductBtn">TAMBAH PRODUK</button>
             </div>
 
-            <!-- Daftar Produk dengan Drag & Drop -->
+            <!-- Daftar Produk -->
             <div class="admin-section">
-                <h3>DAFTAR PRODUK <small style="opacity:0.7; font-size:0.8rem;">(drag ☰ untuk urutkan)</small></h3>
-                <div id="adminProductList" class="admin-product-list sortable-list"></div>
+                <h3>DAFTAR PRODUK</h3>
+                <div id="adminProductList" class="admin-product-list"></div>
             </div>
         </div>
     </div>
@@ -91,7 +89,7 @@
     <!-- Main Content -->
     <div class="container" id="mainContainer"></div>
 
-    <!-- Footer dengan Discord -->
+    <!-- Footer dengan Discord (DI TENGAH) -->
     <footer class="footer" id="mainFooter">
         <div class="footer-container">
             <a href="https://discord.gg/VvkJPDstaw" target="_blank" id="discordLink" class="discord-link">
