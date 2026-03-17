@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOKO KELONTONG ZIZUEL</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Sidebar Admin -->
+    <div class="admin-sidebar" id="adminSidebar">
+        <div class="sidebar-header">
+            <h2>PANEL ADMIN</h2>
+            <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="sidebar-content">
+            <!-- Deskripsi Toko -->
+            <div class="admin-section">
+                <h3>DESKRIPSI TOKO</h3>
+                <textarea id="storeDescription" class="admin-input" rows="3">Toko Kelontong Zizuel menyediakan layanan hosting server bot maupun game, bersedia melengkapi kebutuhan hostingmu</textarea>
+                <button class="admin-btn" id="saveDescriptionBtn">SIMPAN DESKRIPSI</button>
+            </div>
+
+            <!-- Logo Toko -->
+            <div class="admin-section">
+                <h3>LOGO TOKO</h3>
+                <div class="file-upload-area">
+                    <label for="logoUpload" class="file-label">
+                        <i class="fas fa-upload"></i> PILIH GAMBAR LOGO
+                    </label>
+                    <input type="file" id="logoUpload" accept="image/*" hidden>
+                    <span class="file-name" id="logoFileName">Belum ada file</span>
+                </div>
+                <button class="admin-btn" id="saveLogoBtn">SIMPAN LOGO</button>
+            </div>
+
+            <!-- Musik Latar -->
+            <div class="admin-section">
+                <h3>MUSIK LATAR</h3>
+                <div class="file-upload-area">
+                    <label for="musicUpload" class="file-label">
+                        <i class="fas fa-music"></i> PILIH FILE MP3
+                    </label>
+                    <input type="file" id="musicUpload" accept="audio/mpeg" hidden>
+                    <span class="file-name" id="musicFileName">Belum ada file</span>
+                </div>
+                <button class="admin-btn" id="saveMusicBtn">SIMPAN MUSIK</button>
+            </div>
+
+            <!-- Tambah Produk -->
+            <div class="admin-section">
+                <h3>TAMBAH PRODUK</h3>
+                <input type="text" id="productName" class="admin-input" placeholder="NAMA PRODUK">
+                <input type="text" id="productPrice" class="admin-input" placeholder="HARGA (contoh: 5000 atau 5000-20000)">
+                <textarea id="productDesc" class="admin-input" rows="4" placeholder="DESKRIPSI PRODUK (gunakan Enter untuk baris baru)"></textarea>
+                <div class="file-upload-area">
+                    <label for="productImage" class="file-label">
+                        <i class="fas fa-image"></i> GAMBAR PRODUK
+                    </label>
+                    <input type="file" id="productImage" accept="image/*" hidden>
+                    <span class="file-name" id="productImageName">Tidak ada</span>
+                </div>
+                <button class="admin-btn" id="addProductBtn">TAMBAH PRODUK</button>
+            </div>
+
+            <!-- Daftar Produk -->
+            <div class="admin-section">
+                <h3>DAFTAR PRODUK</h3>
+                <div id="adminProductList" class="admin-product-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay untuk sidebar -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <div class="container" id="mainContainer"></div>
+
+    <!-- Footer dengan Discord (DI TENGAH) -->
+    <footer class="footer" id="mainFooter">
+        <div class="footer-container">
+            <a href="https://discord.gg/VvkJPDstaw" target="_blank" id="discordLink" class="discord-link">
+                <i class="fab fa-discord"></i>
+                <span>© tokokelontongzizuel</span>
+            </a>
+        </div>
+    </footer>
+
+    <!-- Hidden Audio Player -->
+    <audio id="bgMusic" loop></audio>
+
+    <script src="index.js"></script>
+</body>
+</html>
