@@ -56,7 +56,7 @@ body {
     padding: 0 20px;
 }
 
-/* ===== HEADER BARU: LOGO FULL WIDTH ===== */
+/* ===== HEADER DENGAN LOGO FULL WIDTH ===== */
 .header {
     margin-bottom: 30px;
     position: relative;
@@ -65,7 +65,7 @@ body {
 /* Logo full width 1:1 */
 .logo-full {
     width: 100%;
-    aspect-ratio: 1 / 1; /* Membuat kotak 1:1 */
+    aspect-ratio: 1 / 1; /* Membuat kotak 1:1 persegi */
     background: #f0f4ff;
     border-radius: 24px;
     overflow: hidden;
@@ -81,7 +81,7 @@ body {
     display: block;
 }
 
-/* ===== EFEK BLUR KACA GRADIENT DARI ATAS KE BAWAH ===== */
+/* Efek blur gradient dari atas ke bawah */
 .logo-full::after {
     content: '';
     position: absolute;
@@ -119,7 +119,7 @@ body {
     font-size: clamp(2.5rem, 10vw, 5rem);
 }
 
-/* Tombol Logout */
+/* Tombol Logout di pojok kanan atas */
 .btn-logout {
     position: absolute;
     top: 20px;
@@ -173,11 +173,6 @@ body {
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
     transition: transform 0.2s, box-shadow 0.2s;
-    cursor: grab;
-}
-
-.product-card:active {
-    cursor: grabbing;
 }
 
 .product-card:hover {
@@ -190,12 +185,10 @@ body {
     height: 180px;
     object-fit: cover;
     background: #2563eb;
-    pointer-events: none;
 }
 
 .product-info {
     padding: 15px;
-    pointer-events: none;
 }
 
 .product-name {
@@ -226,7 +219,6 @@ body {
     -webkit-backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     margin-bottom: 10px;
-    pointer-events: auto;
 }
 
 .product-desc::after {
@@ -280,7 +272,6 @@ body {
     font-size: 0.9rem;
     font-weight: 500;
     transition: background 0.2s;
-    pointer-events: auto;
 }
 
 .btn-wa:hover {
@@ -348,6 +339,10 @@ body {
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
+.login-input::placeholder {
+    color: #94a3b8;
+}
+
 .login-btn {
     width: 100%;
     background: #2563eb;
@@ -387,6 +382,20 @@ body {
     font-size: 0.85rem;
     text-align: center;
     display: none;
+}
+
+.login-message.error {
+    display: block;
+    background: #2a1f2a;
+    border: 1px solid #ff4a4a;
+    color: #ffb0b0;
+}
+
+.login-message.success {
+    display: block;
+    background: #1a2a1f;
+    border: 1px solid #4ae0a0;
+    color: #b0ffc0;
 }
 
 /* Admin Sidebar */
@@ -434,6 +443,11 @@ body {
     padding: 5px;
 }
 
+.close-sidebar:hover {
+    background: #1d4ed8;
+    border-radius: 8px;
+}
+
 .sidebar-content {
     padding: 20px;
 }
@@ -471,6 +485,10 @@ body {
     box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
 }
 
+.file-upload-area {
+    margin-bottom: 10px;
+}
+
 .file-label {
     display: inline-block;
     background: #ffffff;
@@ -480,6 +498,12 @@ body {
     font-size: 0.85rem;
     color: #2563eb;
     cursor: pointer;
+    transition: all 0.2s;
+}
+
+.file-label:hover {
+    background: #f0f9ff;
+    border-color: #1d4ed8;
 }
 
 .file-name {
@@ -507,20 +531,62 @@ body {
     background: #1e40af;
 }
 
-/* Admin Product List */
+/* Admin Product List dengan Sortable */
+.admin-product-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.sortable-list {
+    min-height: 50px;
+}
+
 .admin-product-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     background: #2563eb;
     border-radius: 10px;
     padding: 8px 12px;
     margin-bottom: 8px;
+    border: 1px solid #3b82f6;
+    transition: all 0.2s;
+}
+
+.admin-product-item.sortable-ghost {
+    opacity: 0.4;
+    background: #1e40af;
+    border: 2px dashed #ffffff;
+}
+
+.admin-product-item.sortable-drag {
+    opacity: 0.9;
+    transform: rotate(2deg);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.drag-handle {
+    display: inline-block;
+    margin-right: 10px;
+    color: #ffffff;
+    cursor: grab;
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+.drag-handle:hover {
+    opacity: 1;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+.admin-product-info {
+    flex: 1;
 }
 
 .admin-product-info strong {
     font-size: 0.9rem;
     color: #ffffff;
+    display: block;
 }
 
 .admin-product-info small {
@@ -528,15 +594,46 @@ body {
     color: #e0f2fe;
 }
 
+.admin-product-actions {
+    display: flex;
+    gap: 5px;
+}
+
 .admin-product-actions button {
     background: #1d4ed8;
-    border: none;
+    border: 1px solid #3b82f6;
     border-radius: 6px;
     padding: 4px 10px;
     color: #ffffff;
     font-size: 0.8rem;
     cursor: pointer;
-    margin-left: 5px;
+    transition: all 0.2s;
+}
+
+.admin-product-actions button:hover {
+    background: #1e40af;
+    border-color: #ffffff;
+}
+
+/* Sidebar Overlay */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
 }
 
 /* Footer Discord */
@@ -586,6 +683,10 @@ body {
 
 /* Responsive */
 @media (max-width: 768px) {
+    .header {
+        margin-bottom: 20px;
+    }
+    
     .store-title-full h1 {
         font-size: clamp(1.8rem, 7vw, 3rem);
     }
@@ -596,5 +697,17 @@ body {
     
     .products-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .btn-logout {
+        top: 10px;
+        right: 10px;
+        padding: 6px 16px;
+        font-size: 0.8rem;
+    }
+    
+    .admin-sidebar {
+        width: 100%;
+        max-width: 100%;
     }
 }

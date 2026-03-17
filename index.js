@@ -19,7 +19,7 @@ let settings = {
     logo: '',
     music: ''
 };
-let sortable = null;
+let adminSortable = null;
 
 // ================== DOM ELEMENTS ==================
 const loadingOverlay = document.getElementById('loadingOverlay');
@@ -84,9 +84,11 @@ window.toggleDesc = function(element) {
 // ================== LOAD DATA FROM SUPABASE ==================
 async function loadProducts() {
     try {
+        // Ambil produk dengan urutan sort_order, kalau null berarti 0
         const { data, error } = await supabaseClient
             .from('products')
             .select('*')
+            .order('sort_order', { ascending: true, nullsFirst: false })
             .order('created_at', { ascending: false });
         
         if (error) throw error;
@@ -169,6 +171,11 @@ async function saveSettings(updates) {
 
 async function saveProduct(product) {
     try {
+        // Dapatkan sort_order tertinggi + 1
+        const maxSort = products.length > 0 
+            ? Math.max(...products.map(p => p.sort_order || 0)) + 1 
+            : 0;
+        
         const { data, error } = await supabaseClient
             .from('products')
             .insert([{
@@ -177,7 +184,7 @@ async function saveProduct(product) {
                 deskripsi: product.deskripsi || '',
                 image: product.image || '',
                 user_id: currentUser?.email || 'admin',
-                sort_order: products.length // Menambahkan urutan
+                sort_order: maxSort
             }])
             .select();
         
@@ -219,12 +226,12 @@ async function deleteProduct(id) {
     }
 }
 
-// ================== FUNGSI UPDATE URUTAN PRODUK ==================
+// ================== FUNGSI UPDATE URUTAN PRODUK (DI ADMIN) ==================
 async function updateProductOrder(newOrder) {
     showLoading();
     
     try {
-        // Update setiap produk dengan sort_order baru
+        // Update setiap produk dengan sort_order baru (urutan dari array)
         for (let i = 0; i < newOrder.length; i++) {
             const productId = newOrder[i].dataset.id;
             await supabaseClient
@@ -233,31 +240,37 @@ async function updateProductOrder(newOrder) {
                 .eq('id', productId);
         }
         
-        // Reload produk
+        // Reload produk untuk halaman utama
         await loadProducts();
+        
+        // Render ulang halaman utama agar urutan berubah
+        await renderMainPage();
+        
     } catch (error) {
         console.error('Error updating order:', error);
-        alert('Gagal mengupdate urutan');
+        alert('Gagal mengupdate urutan: ' + error.message);
     } finally {
         hideLoading();
     }
 }
 
-// ================== INIT SORTABLE ==================
-function initSortable() {
-    const grid = document.getElementById('productsGrid');
-    if (!grid || !currentUser || currentUser.role !== 'admin') return;
+// ================== INIT SORTABLE DI ADMIN ==================
+function initAdminSortable() {
+    const list = document.getElementById('adminProductList');
+    if (!list) return;
     
-    if (sortable) {
-        sortable.destroy();
+    if (adminSortable) {
+        adminSortable.destroy();
     }
     
-    sortable = new Sortable(grid, {
+    adminSortable = new Sortable(list, {
         animation: 300,
-        ghostClass: 'product-card-ghost',
-        dragClass: 'product-card-drag',
+        ghostClass: 'sortable-ghost',
+        dragClass: 'sortable-drag',
+        handle: '.drag-handle', // Optional: handle khusus
         onEnd: function(evt) {
-            const newOrder = Array.from(grid.children);
+            const newOrder = Array.from(list.children);
+            // Update urutan di database
             updateProductOrder(newOrder);
         }
     });
@@ -442,12 +455,17 @@ async function renderMainPage() {
     
     const header = `
         <header class="header">
+            <!-- LOGO FULL WIDTH 1:1 DI ATAS SENDIRI -->
             <div class="logo-full" id="logoContainer">
                 <img id="storeLogo" class="store-logo-full" src="${settings.logo || 'https://via.placeholder.com/1200x1200/3b82f6/ffffff?text=Z'}" alt="Toko Zizuel">
             </div>
+            
+            <!-- NAMA TOKO BESAR DI BAWAH LOGO -->
             <div class="store-title-full">
                 <h1>TOKO KELONTONG<br><span>ZIZUEL</span></h1>
             </div>
+            
+            <!-- TOMBOL LOGOUT DI POJOK -->
             <button class="btn-logout" id="navLogout">KELUAR</button>
         </header>
         
@@ -485,18 +503,21 @@ async function renderMainPage() {
         }).join('');
     }
     
+    // Event logout
     document.getElementById('navLogout').addEventListener('click', logout);
     
+    // Klik logo untuk buka admin panel (khusus admin)
     const logoContainer = document.getElementById('logoContainer');
     if (currentUser?.role === 'admin') {
         logoContainer.style.cursor = 'pointer';
         logoContainer.addEventListener('click', openAdminSidebar);
-        initSortable();
     }
     
+    // Set link Discord
     const discordLink = document.getElementById('discordLink');
     discordLink.href = DISCORD_LINK;
     
+    // Play musik
     if (settings.music) {
         bgMusic.src = settings.music;
         bgMusic.play().catch(e => console.log('Autoplay blocked'));
@@ -508,7 +529,10 @@ async function renderMainPage() {
 // ================== ADMIN SIDEBAR ==================
 function openAdminSidebar() {
     adminSidebar.classList.add('active');
-    renderAdminProductList();
+    renderAdminProductList().then(() => {
+        // Init sortable setelah list dirender
+        initAdminSortable();
+    });
     
     document.getElementById('storeDescription').value = settings.description;
     document.getElementById('logoFileName').textContent = settings.logo ? 'Logo tersedia' : 'Belum ada file';
@@ -517,6 +541,10 @@ function openAdminSidebar() {
 
 function closeAdminSidebar() {
     adminSidebar.classList.remove('active');
+    if (adminSortable) {
+        adminSortable.destroy();
+        adminSortable = null;
+    }
 }
 
 async function renderAdminProductList() {
@@ -531,14 +559,17 @@ async function renderAdminProductList() {
     }
     
     listContainer.innerHTML = products.map(prod => `
-        <div class="admin-product-item">
-            <div class="admin-product-info">
-                <strong>${escapeHtml(prod.nama)}</strong>
-                <small>${formatHarga(prod.harga)}</small>
-            </div>
-            <div class="admin-product-actions">
-                <button onclick="editProductHandler('${prod.id}')">EDIT</button>
-                <button onclick="deleteProductHandler('${prod.id}')">HAPUS</button>
+        <div class="admin-product-item" data-id="${prod.id}">
+            <div style="display: flex; align-items: center; width: 100%;">
+                <span class="drag-handle">☰</span>
+                <div class="admin-product-info" style="flex: 1;">
+                    <strong>${escapeHtml(prod.nama)}</strong>
+                    <small>${formatHarga(prod.harga)}</small>
+                </div>
+                <div class="admin-product-actions">
+                    <button onclick="editProductHandler('${prod.id}')">EDIT</button>
+                    <button onclick="deleteProductHandler('${prod.id}')">HAPUS</button>
+                </div>
             </div>
         </div>
     `).join('');
@@ -567,7 +598,7 @@ window.editProductHandler = async (id) => {
         });
         
         await renderMainPage();
-        renderAdminProductList();
+        await renderAdminProductList();
         alert('Produk berhasil diupdate');
         closeAdminSidebar();
     } catch (error) {
@@ -585,7 +616,7 @@ window.deleteProductHandler = async (id) => {
     try {
         await deleteProduct(id);
         await renderMainPage();
-        renderAdminProductList();
+        await renderAdminProductList();
         alert('Produk berhasil dihapus');
         closeAdminSidebar();
     } catch (error) {
@@ -669,7 +700,7 @@ function initAdminEvents() {
                 });
                 
                 await renderMainPage();
-                renderAdminProductList();
+                await renderAdminProductList();
                 
                 document.getElementById('productName').value = '';
                 document.getElementById('productPrice').value = '';
@@ -709,11 +740,6 @@ async function logout() {
     bgMusic.pause();
     bgMusic.src = '';
     closeAdminSidebar();
-    
-    if (sortable) {
-        sortable.destroy();
-        sortable = null;
-    }
     
     document.getElementById('mainFooter').style.display = 'none';
     
