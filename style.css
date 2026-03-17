@@ -53,67 +53,88 @@ body {
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 0 20px;
 }
 
-/* Header */
+/* ===== HEADER BARU: LOGO FULL WIDTH ===== */
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     margin-bottom: 30px;
-    flex-wrap: wrap;
-    gap: 20px;
+    position: relative;
 }
 
-.logo-area {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    cursor: pointer;
+/* Logo full width 1:1 */
+.logo-full {
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Membuat kotak 1:1 */
+    background: #f0f4ff;
+    border-radius: 24px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+    position: relative;
 }
 
-.store-logo {
-    width: 60px;
-    height: 60px;
-    border-radius: 12px;
+.store-logo-full {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    background: #e0f2fe;
-    border: 2px solid #3b82f6;
+    display: block;
 }
 
-.store-title {
-    display: flex;
-    flex-direction: column;
+/* ===== EFEK BLUR KACA GRADIENT DARI ATAS KE BAWAH ===== */
+.logo-full::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, 
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0.8) 80%,
+        #ffffff 100%);
+    pointer-events: none;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
 }
 
-.store-title .line1 {
-    font-size: 1.4rem;
-    font-weight: 600;
+/* Nama store besar di bawah logo */
+.store-title-full {
+    text-align: center;
+    margin: 20px 0 30px;
+}
+
+.store-title-full h1 {
+    font-size: clamp(2rem, 8vw, 4rem);
+    font-weight: 800;
     color: #1e293b;
     line-height: 1.2;
+    letter-spacing: -0.02em;
 }
 
-.store-title .line2 {
-    font-size: 1.8rem;
-    font-weight: 700;
+.store-title-full h1 span {
     color: #3b82f6;
-    line-height: 1.2;
-    letter-spacing: 1px;
+    display: block;
+    font-size: clamp(2.5rem, 10vw, 5rem);
 }
 
 /* Tombol Logout */
 .btn-logout {
+    position: absolute;
+    top: 20px;
+    right: 20px;
     background: #3b82f6;
     color: #ffffff;
     border: none;
     border-radius: 30px;
-    padding: 6px 20px;
+    padding: 8px 24px;
     font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
     transition: background 0.2s;
-    box-shadow: 0 2px 5px rgba(59, 130, 246, 0.3);
+    z-index: 10;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .btn-logout:hover {
@@ -142,6 +163,7 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
+    margin-top: 20px;
 }
 
 /* Product Card */
@@ -150,7 +172,12 @@ body {
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: grab;
+}
+
+.product-card:active {
+    cursor: grabbing;
 }
 
 .product-card:hover {
@@ -163,11 +190,12 @@ body {
     height: 180px;
     object-fit: cover;
     background: #2563eb;
-    cursor: pointer;
+    pointer-events: none;
 }
 
 .product-info {
     padding: 15px;
+    pointer-events: none;
 }
 
 .product-name {
@@ -175,19 +203,18 @@ body {
     font-weight: 600;
     color: #ffffff;
     margin-bottom: 5px;
-    cursor: pointer;
 }
 
-/* ===== EFEK BLUR KACA UNTUK DESKRIPSI ===== */
+/* Deskripsi dengan efek blur kaca */
 .product-desc {
     font-size: 0.9rem;
     color: #e0f2fe;
     line-height: 1.6;
-    white-space: pre-line; /* Membuat enter jadi baris baru */
+    white-space: pre-line;
     position: relative;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Animasi bounce */
-    max-height: 60px; /* Batas 3 baris */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    max-height: 60px;
     overflow: hidden;
     padding: 8px 12px;
     border-radius: 12px;
@@ -198,11 +225,10 @@ body {
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    margin-bottom: 10px;
+    pointer-events: auto;
 }
 
-/* Efek blur gradient di bagian bawah */
 .product-desc::after {
     content: '';
     position: absolute;
@@ -218,21 +244,8 @@ body {
     border-radius: 0 0 12px 12px;
 }
 
-/* Efek hover */
-.product-desc:hover {
-    background: linear-gradient(135deg, 
-        rgba(255, 255, 255, 0.3) 0%, 
-        rgba(255, 255, 255, 0.2) 50%,
-        rgba(255, 255, 255, 0.1) 100%);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-}
-
-/* Saat di-expand (di klik) */
 .product-desc.expanded {
-    max-height: 800px; /* Muat banyak teks */
+    max-height: 800px;
     background: linear-gradient(135deg, 
         rgba(255, 255, 255, 0.35) 0%, 
         rgba(255, 255, 255, 0.25) 50%,
@@ -241,16 +254,12 @@ body {
     -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.4);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-    transform: scale(1.02) translateY(-3px);
-    padding: 12px 16px;
 }
 
-/* Hilangkan efek blur bawah saat expand */
 .product-desc.expanded::after {
     opacity: 0;
 }
 
-/* Product Price */
 .product-price {
     font-size: 1.4rem;
     font-weight: 700;
@@ -271,6 +280,7 @@ body {
     font-size: 0.9rem;
     font-weight: 500;
     transition: background 0.2s;
+    pointer-events: auto;
 }
 
 .btn-wa:hover {
@@ -576,21 +586,12 @@ body {
 
 /* Responsive */
 @media (max-width: 768px) {
-    .header {
-        flex-direction: column;
-        text-align: center;
+    .store-title-full h1 {
+        font-size: clamp(1.8rem, 7vw, 3rem);
     }
     
-    .logo-area {
-        justify-content: center;
-    }
-    
-    .store-title .line1 {
-        font-size: 1.2rem;
-    }
-    
-    .store-title .line2 {
-        font-size: 1.5rem;
+    .store-title-full h1 span {
+        font-size: clamp(2rem, 9vw, 4rem);
     }
     
     .products-grid {
